@@ -9,9 +9,9 @@ class Cart extends Component {
     }
 
     inputVal(event, item, changeCount) {
+        // quantity input validation
         let newCount = event.target.value;
-
-        if(newCount < 0) {
+        if(newCount < 0 || isNaN(newCount)) {
             newCount = 0;
         }
         newCount = Math.round(newCount);
@@ -25,7 +25,7 @@ class Cart extends Component {
         let totalPrice = 0;
 
         for(let i = 0; i < cart.length; i++) {
-            totalPrice += cart[i].totalPrice;
+            totalPrice += cart[i].totalPrice; // total price of all products in the cart
         }
 
         return (

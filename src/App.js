@@ -78,11 +78,12 @@ class App extends Component {
 
   goods(result) {
     if(this.state.result == null) {
+      // set price for every product
       for(let i = 0; i < result.length; i++) {
         let rand = Math.random() * (20 - 5) + 5;
         rand = Math.round(rand);
         result[i].price = rand;
-        result[i].favorite = false;
+        result[i].favorite = false; // marks that the products is not in favorites
       }
       this.setState({
         result: result,
@@ -90,17 +91,15 @@ class App extends Component {
     }
   }
 
-  addToFavorites(item, event) {
-    let favIcon = event.target;
+  addToFavorites(item) {
     let favorites = this.state.favorites;
     let result = this.state.result;
 
     for(let i = 0; i < favorites.length; i++) {
+      // if product already in favorites - remove it 
       if(favorites[i].id === item.id) {
         favorites.splice(i, 1);
         result[item.id-1].favorite = false;
-        favIcon.classList.remove("fas");
-        favIcon.classList.add("far");
         this.setState({
           favorites: favorites,
           result: result,
@@ -108,15 +107,12 @@ class App extends Component {
         return null;
       }
     }
-
+    // add new product to the favorites
     for(let i = 0; i < result.length; i++) {
       if(result[i].id === item.id) {
         result[i].favorite = true;
-        favIcon.classList.add("fas");
-        favIcon.classList.remove("far");
       }
     }
-
     favorites.push(item);
     this.setState({
       favorites: favorites,
@@ -126,6 +122,7 @@ class App extends Component {
 
   addToCart(item, count) {
     let currentItems = this.state.cart;
+    // if the product already in the cart increase quantity value
     for(let i = 0; i < currentItems.length; i++) {
       if(+currentItems[i].item.id === item.id) {
         currentItems[i].count = +currentItems[i].count + count;
@@ -136,6 +133,7 @@ class App extends Component {
         return null;
       }
     }
+    // add new product to the cart 
     currentItems.push({
       item: item,
       count: count,
@@ -147,6 +145,7 @@ class App extends Component {
   }
 
   removeFromCart(id) {
+    // remove product from the cart
     let cart = this.state.cart;
     for(let i = 0; i < cart.length; i++) {
       if(cart[i].item.id === id) {
@@ -159,6 +158,7 @@ class App extends Component {
   }
 
   changeCount(item, count) {
+    // change quantity value of products in the cart 
     let currentItems = this.state.cart;
     for(let i = 0; i < currentItems.length; i++) {
       if(+currentItems[i].item.id === item.id) {
@@ -181,8 +181,8 @@ class App extends Component {
   }
 
   totalPriceFunc(item, count) {
+    // calculates total price of each product in the cart
     let currentItems = this.state.cart;
-
     for(let i = 0; i < currentItems.length; i++) {
       if(+currentItems[i].item.id === item.id) {
         currentItems[i].totalPrice = currentItems[i].count * currentItems[i].item.price;
@@ -213,9 +213,7 @@ class App extends Component {
             <Menu favorites={this.state.favorites} cart={this.state.cart}></Menu>
             <Route exact path="/" render={ () => <Products result={result} addToFavorites={this.addToFavorites} />} />
             <Route path="/favorites" render={ () => <Favorites favorites={favorites} addToFavorites={this.addToFavorites} /> } />
-            <Route path="/products/:productId" render={({ match }) => (
-              <Description result={result} productId={match.params.productId} addToFavorites={this.addToFavorites} addToCart={this.addToCart} />
-            )} />
+            <Route path="/products/:productId" render={({ match }) => (<Description result={result} productId={match.params.productId} addToFavorites={this.addToFavorites} addToCart={this.addToCart} />)} />
             <Route path="/cart" render={ () => <Cart cart={cart} changeCount={this.changeCount} removeFromCart={this.removeFromCart} /> } />
         </div>
       </Router>

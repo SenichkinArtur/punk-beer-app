@@ -10,8 +10,9 @@ class Description extends Component {
         this.inputVal = this.inputVal.bind(this);
     }
     inputVal(event) {
+        // quantity input validation
         let count = event.target.value;
-        if(count < 0) {
+        if(count < 0 || isNaN(count)) {
             count = 0;
         }
         count = Math.round(count);
@@ -29,8 +30,9 @@ class Description extends Component {
         
 
         for(let i = 1; i <= result.length; i++) {
+            // set the current product to the item
             if(i === +productId) {
-                item = result[i-1];
+                item = result[i-1]; 
             }
         }
 
@@ -69,7 +71,7 @@ class Description extends Component {
                                 : <i onClick={(event) => {addToFavorites(item, event)}} ref={this.favorteIcon} className="far fa-star add_favorites_btn"></i>
                             }
                             <div className="beer_description_cart_wrap">
-                                <input placeholder="1" className="beer_description_count_input" type="text" onChange={this.inputVal}/>
+                                <input className="beer_description_count_input" type="text" value={count} onChange={this.inputVal}/>
                                 <button className="beer_description_cart_btn" onClick={() => {addToCart(item, count)}}>Add to cart</button>
                             </div>
                         </div>
